@@ -45,6 +45,20 @@ function initCanvas() {
   ctx.fillRect(0, 0, canvasEL.width, canvasEL.height);
   ctx.strokeRect(0, 0, canvasEL.width, canvasEL.height);
 }
+
+function selectColor(color) {
+  if (this === window) {
+    colorPalletteEL.children[color].style.borderColor = "red";
+    selectedColor = color;
+  } else {
+    [...colorPalletteEL.children].forEach((c) => {
+      c.style.borderColor = DEFAULT_BORDER_COLOR;
+    });
+    this.style.borderColor = "red";
+    selectedColor = this.colorCode;
+  }
+}
+
 function initColorPalette() {
   colors.forEach((color, index) => {
     let swatch = create("div");
@@ -54,5 +68,8 @@ function initColorPalette() {
     swatch.addEventListener("click", selectColor);
     colorPalletteEL.append(swatch);
   });
+  selectColor(0);
+}
+
 initCanvas();
 initColorPalette();
