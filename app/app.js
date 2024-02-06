@@ -44,29 +44,24 @@ const toolPaletteEL = el("#tools");
 // variables
 let selectedColor = 0;
 let selectedTool = 0;
-let selectedLineWeight = 10;
+let selectedLineWidth = 10;
 let canvasBounding;
 let isDrawing = false;
 let drawX = 0;
 let drawY = 0;
+let backgroundColor = "#FFF";
 
 // SECTION: logic
-
-function drawCanvasBorder() {
-  ctx.strokeStyle = "black"; // Outline color
-  ctx.lineWidth = 3; // Outline width
-  ctx.fillStyle = "white";
+function clearCanvas() {
+  ctx.fillStyle = backgroundColor;
   ctx.fillRect(0, 0, canvasEL.width, canvasEL.height);
-  ctx.strokeRect(0, 0, canvasEL.width, canvasEL.height);
 }
 
 function initCanvas() {
-  canvasEL.style.width = "80%";
-  canvasEL.style.height = "80%";
   canvasBounding = canvasEL.getBoundingClientRect();
   canvasEL.height = canvasBounding.height;
   canvasEL.width = canvasBounding.width;
-  drawCanvasBorder();
+  clearCanvas();
 }
 
 function selectColor(color) {
@@ -100,6 +95,7 @@ function initToolPalette() {
     selectTool(0);
   });
 }
+
 function selectTool(tool) {
   if (this === window) {
     toolPaletteEL.children[tool].style.border = SELECTED_BORDER_STYLE;
@@ -109,33 +105,43 @@ function selectTool(tool) {
       t.style.border = DEFAULT_BORDER_STYLE;
     });
     this.style.border = SELECTED_BORDER_STYLE;
-    selectedTool = this.toolCode;
+    selectedTool = this.getAttribute("toolCode");
   }
 }
 
 function draw(e) {
   if (!isDrawing) return;
-
-  ctx.lineJoin = "miter";
-  ctx.lineCap = "round";
   ctx.beginPath();
-  ctx.moveTo(lastX, lastY);
+  ctx.moveTo(drawX, drawY);
   ctx.lineTo(e.offsetX, e.offsetY);
   ctx.stroke();
-  [lastX, lastY] = [e.offsetX, e.offsetY];
+  [drawX, drawY] = [e.offsetX, e.offsetY];
 }
 
 canvasEL.addEventListener("mousedown", (e) => {
-  ctx.strokeStyle = COLORS[selectedColor];
-  ctx.lineWidth = selectedLineWeight;
+  if (selectedTool == 0) {
+    ctx.strokeStyle = COLORS[selectedColor];
+  }
+  if (selectedTool == 1) {
+    ctx.strokeStyle = backgroundColor;
+  }
+  ctx.lineWidth = selectedLineWidth;
+  ctx.lineCap = "round";
   isDrawing = true;
-  [lastX, lastY] = [e.offsetX, e.offsetY];
+  [drawX, drawY] = [e.offsetX, e.offsetY];
 });
 
 canvasEL.addEventListener("mousemove", draw);
 canvasEL.addEventListener("mouseup", () => (isDrawing = false));
 canvasEL.addEventListener("mouseout", () => (isDrawing = false));
 
+let link = document.getElementById("saveCanvas");
+link.addEventListener("click", function () {
+  link.href = canvasEL.toDataURL("image/png");
+  link.download = "MintyPaper.png";
+});
+
+el("#eraseCanvas").addEventListener("click", clearCanvas);
 initCanvas();
 initColorPalette();
 initToolPalette();
