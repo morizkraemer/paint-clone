@@ -6,13 +6,13 @@ function el(css) {
 function create(html) {
   return document.createElement(html);
 }
-// SECTION: variables
-const canvasEL = el("#canvas");
-const ctx = canvasEL.getContext("2d");
-const colorPalletteEL = el("#colors");
-let selectedColor = 0;
-const DEFAULT_BORDER_COLOR = "#444444";
-let colors = [
+
+// SECTION: variable declarations
+
+// constants
+const DEFAULT_BORDER_STYLE = "#444444 solid";
+const SELECTED_BORDER_STYLE = "red dashed";
+let COLORS = [
   "#000000", // Black
   "#808080", // Gray
   "#800000", // Maroon
@@ -37,7 +37,21 @@ let colors = [
 
 canvasEL.style.width = "80%";
 canvasEL.style.height = "80%";
+// elements
+const canvasEL = el("#canvas");
+const ctx = canvasEL.getContext("2d");
+const colorPalletteEL = el("#colors");
+const toolPaletteEL = el("#tools");
 
+// variables
+let selectedColor = 0;
+let selectedTool = 0;
+let selectedLineWeight = 10;
+let canvasBounding;
+let isDrawing = false;
+let drawX = 0;
+let drawY = 0;
+// SECTION: logic
 function initCanvas() {
   ctx.strokeStyle = "black"; // Outline color
   ctx.lineWidth = 3; // Outline width
