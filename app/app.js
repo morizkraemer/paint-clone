@@ -36,8 +36,10 @@ let COLORS = [
 ];
 
 // elements
-const canvasEL = el("#canvas");
-const ctx = canvasEL.getContext("2d");
+const canvasEl = el("#canvas");
+const ctx = canvasEl.getContext("2d", {
+  willReadFrequently: true,
+});
 const colorPalletteEL = el("#colors");
 const toolPaletteEL = el("#tools");
 
@@ -45,27 +47,18 @@ const toolPaletteEL = el("#tools");
 let selectedColor = 0;
 let selectedTool = 0;
 let selectedLineWidth = 10;
-let canvasBounding;
 let isDrawing = false;
 let drawX = 0;
 let drawY = 0;
 let backgroundColor = "#FFF";
 
 // SECTION: logic
-function clearCanvas() {
-  ctx.fillStyle = backgroundColor;
-  ctx.fillRect(0, 0, canvasEL.width, canvasEL.height);
 // SECTION: logic helpers
 function convertRGB(color) {
   const { r, g, b, a } = color;
   return `rgba(${r}, ${g}, ${b}, ${(a / 255).toFixed(1)})`;
 }
 
-function initCanvas() {
-  canvasBounding = canvasEL.getBoundingClientRect();
-  canvasEL.height = canvasBounding.height;
-  canvasEL.width = canvasBounding.width;
-  clearCanvas();
 function getPixelColor(imageData, x = 0, y = 0) {
   const { width, data } = imageData;
   const index = (y * width + x) * 4;
@@ -86,6 +79,11 @@ function colorsMatch(a, b) {
   return a.r === b.r && a.g === b.g && a.b === b.b && a.a === b.a;
 }
 
+function clearCanvas() {
+  ctx.fillStyle = backgroundColor;
+  ctx.fillRect(0, 0, canvasEl.width, canvasEl.height);
+}
+
 function selectColor(color) {
   if (this === window) {
     colorPalletteEL.children[color].style.border = SELECTED_BORDER_STYLE;
@@ -97,6 +95,12 @@ function selectColor(color) {
     this.style.border = SELECTED_BORDER_STYLE;
     selectedColor = this.colorCode;
   }
+}
+
+function initCanvas() {
+  canvasEl.height = canvasEl.clientHeight;
+  canvasEl.width = canvasEl.clientWidth;
+  clearCanvas();
 }
 
 function initColorPalette() {
