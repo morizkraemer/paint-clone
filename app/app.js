@@ -13,26 +13,26 @@ function create(html) {
 const DEFAULT_BORDER_STYLE = "#444444 solid";
 const SELECTED_BORDER_STYLE = "red dashed";
 let COLORS = [
-  "rgba(0, 0, 0, 1.0)", // Black
-  "rgba(128, 128, 128, 1.0)", // Gray
-  "rgba(128, 0, 0, 1.0)", // Maroon
-  "rgba(255, 0, 0, 1.0)", // Red
-  "rgba(128, 0, 128, 1.0)", // Purple
-  "rgba(255, 0, 255, 1.0)", // Fuchsia
-  "rgba(0, 128, 0, 1.0)", // Green
-  "rgba(0, 255, 0, 1.0)", // Lime
-  "rgba(128, 128, 0, 1.0)", // Olive
-  "rgba(255, 255, 0, 1.0)", // Yellow
-  "rgba(0, 0, 128, 1.0)", // Navy
-  "rgba(0, 0, 255, 1.0)", // Blue
-  "rgba(0, 128, 128, 1.0)", // Teal
-  "rgba(0, 255, 255, 1.0)", // Aqua
-  "rgba(255, 255, 255, 1.0)", // White
-  "rgba(192, 192, 192, 1.0)", // Silver
-  "rgba(255, 165, 0, 1.0)", // Orange
-  "rgba(255, 192, 203, 1.0)", // Pink
-  "rgba(255, 255, 224, 1.0)", // Light Yellow
-  "rgba(245, 245, 220, 1.0)", // Beige
+  { r: 0, g: 0, b: 0, a: 255 }, // Black
+  { r: 128, g: 128, b: 128, a: 255 }, // Gray
+  { r: 128, g: 0, b: 0, a: 255 }, // Maroon
+  { r: 255, g: 0, b: 0, a: 255 }, // Red
+  { r: 128, g: 0, b: 128, a: 255 }, // Purple
+  { r: 255, g: 0, b: 255, a: 255 }, // Fuchsia
+  { r: 0, g: 128, b: 0, a: 255 }, // Green
+  { r: 0, g: 255, b: 0, a: 255 }, // Lime
+  { r: 128, g: 128, b: 0, a: 255 }, // Olive
+  { r: 255, g: 255, b: 0, a: 255 }, // Yellow
+  { r: 0, g: 0, b: 128, a: 255 }, // Navy
+  { r: 0, g: 0, b: 255, a: 255 }, // Blue
+  { r: 0, g: 128, b: 128, a: 255 }, // Teal
+  { r: 0, g: 255, b: 255, a: 255 }, // Aqua
+  { r: 255, g: 255, b: 255, a: 255 }, // White
+  { r: 192, g: 192, b: 192, a: 255 }, // Silver
+  { r: 255, g: 165, b: 0, a: 255 }, // Orange
+  { r: 255, g: 192, b: 203, a: 255 }, // Pink
+  { r: 255, g: 255, b: 224, a: 255 }, // Light Yellow
+  { r: 245, g: 245, b: 220, a: 255 }, // Beige
 ];
 
 // elements
@@ -122,7 +122,8 @@ function initCanvas() {
 function initColorPalette() {
   COLORS.forEach((color, index) => {
     let swatch = create("div");
-    swatch.style.backgroundColor = color;
+    console.log(convertRGB(color));
+    swatch.style.backgroundColor = convertRGB(color);
     swatch.style.border = DEFAULT_BORDER_STYLE;
     swatch.colorCode = index;
     swatch.addEventListener("click", selectColor);
@@ -155,7 +156,9 @@ canvasEl.addEventListener("mousedown", (e) => {
     case 1: // eraser
       //paintbrush and eraser only differ in color
       ctx.strokeStyle =
-        selectedTool === 0 ? COLORS[selectedColor] : backgroundColor;
+        selectedTool === 0
+          ? convertRGB(COLORS[selectedColor])
+          : backgroundColor;
       ctx.lineWidth = selectedLineWidth;
       ctx.lineCap = "round";
       isDrawing = true;
