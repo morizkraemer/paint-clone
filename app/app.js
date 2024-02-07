@@ -75,10 +75,6 @@ function findColorIndex(rgbColor) {
   return output !== -1 ? output : 0;
 }
 
-function colorsMatch(a, b) {
-  return a.r === b.r && a.g === b.g && a.b === b.b && a.a === b.a;
-}
-
 function clearCanvas() {
   ctx.fillStyle = backgroundColor;
   ctx.fillRect(0, 0, canvasEl.width, canvasEl.height);
@@ -190,6 +186,48 @@ canvasEl.addEventListener("mouseout", () => (isDrawing = false));
 el("#strokeWidth").addEventListener("change", () => {
   selectedLineWidth = el("#strokeWidth").value;
 });
+
+//SECTION: fill tool
+
+function fillArea(imageData, startX, startY, fillColorCode) {
+  function colorsMatch(a, b) {
+    return a.r === b.r && a.g === b.g && a.b === b.b && a.a === b.a;
+  }
+  const targetColor = getPixelColor(imageData, startX, startY);
+  const checked = new Set();
+
+  function fillRecursively(x, y) {
+    const pixel = `${x}, ${y}`;
+    const imageDataIndex = (y * imageData.width + x) * 4;
+    if (checked.has(pixel)) {
+      return;
+    }
+    if (!colorsMatch(targetColor, getPixelColor(imageData, x, y))) {
+      return;
+    }
+
+    checked.add(pixel);
+    imageData.data[imageDataIndex] = COLORS[fillColorCode].r;
+    imageData.data[imageDataIndex + 1] = COLORS[fillColorCode].g;
+    imageData.data[imageDataIndex + 2] = COLORS[fillColorCode].b;
+    imageData.data[imageDataIndex + 3] = COLORS[fillColorCode].a;
+
+    if (x > 0) {
+      fillRecursively(x - 1, y);
+    }
+    if (y > 0) {
+      fillRecursively(x, y - 1);
+    }
+    if (x < imageData.width - 1) {
+      fillRecursively(x + 1, y);
+    }
+    if (y < imageData.height - 1) {
+      fillRecursively(x, y + 1);
+    }
+  }
+  fillRecursively(startX, startY);
+  ctx.putImageData(imageData, 0, 0);
+}
 
 // SECTION: downloadbutton
 let downloadButton = document.getElementById("saveCanvas");
