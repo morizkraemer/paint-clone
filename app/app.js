@@ -111,6 +111,8 @@ function selectTool(tool) {
   }
 }
 
+// SECTION: initialization
+
 function initCanvas() {
   canvasEl.height = canvasEl.clientHeight;
   canvasEl.width = canvasEl.clientWidth;
@@ -131,11 +133,13 @@ function initColorPalette() {
 
 function initToolPalette() {
   [...toolPaletteEL.children].forEach((tool) => {
+    tool.style.border = DEFAULT_BORDER_STYLE;
     tool.addEventListener("click", selectTool);
     selectTool(0);
   });
 }
 
+//SECTION: drawing
 function draw(e) {
   if (!isDrawing) return;
   ctx.beginPath();
@@ -162,10 +166,11 @@ canvasEL.addEventListener("mousemove", draw);
 canvasEL.addEventListener("mouseup", () => (isDrawing = false));
 canvasEL.addEventListener("mouseout", () => (isDrawing = false));
 
-let link = document.getElementById("saveCanvas");
-link.addEventListener("click", function () {
-  link.href = canvasEL.toDataURL("image/png");
-  link.download = "MintyPaper.png";
+// SECTION: downloadbutton
+let downloadButton = document.getElementById("saveCanvas");
+downloadButton.addEventListener("click", function () {
+  downloadButton.href = canvasEl.toDataURL("image/png");
+  downloadButton.download = "MyPicture.png";
 });
 
 el("#eraseCanvas").addEventListener("click", clearCanvas);
