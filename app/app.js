@@ -149,22 +149,44 @@ function draw(e) {
   [drawX, drawY] = [e.offsetX, e.offsetY];
 }
 
-canvasEL.addEventListener("mousedown", (e) => {
-  if (selectedTool == 0) {
-    ctx.strokeStyle = COLORS[selectedColor];
+canvasEl.addEventListener("mousedown", (e) => {
+  switch (selectedTool) {
+    case 0: // paintbrush
+    case 1: // eraser
+      //paintbrush and eraser only differ in color
+      ctx.strokeStyle =
+        selectedTool === 0 ? COLORS[selectedColor] : backgroundColor;
+      ctx.lineWidth = selectedLineWidth;
+      ctx.lineCap = "round";
+      isDrawing = true;
+      [drawX, drawY] = [e.offsetX, e.offsetY];
+      break;
+    case 2: // paintbucket
+      const imageDataPaintBucket = ctx.getImageData(
+        0,
+        0,
+        canvasEl.width,
+        canvasEl.height,
+      );
+      fillArea(imageDataPaintBucket, e.offsetX, e.offsetY, selectedColor);
+
+      break;
+    case 3: // colorpicker
+      const imageDataColorPicker = ctx.getImageData(e.offsetX, e.offsetY, 1, 1);
+      const rgbColor = convertRGB(getPixelColor(imageDataColorPicker));
+      const colorIndex = findColorIndex(rgbColor);
+      selectColor(colorIndex);
+      selectTool(0);
+      break;
   }
-  if (selectedTool == 1) {
-    ctx.strokeStyle = backgroundColor;
-  }
-  ctx.lineWidth = selectedLineWidth;
-  ctx.lineCap = "round";
-  isDrawing = true;
-  [drawX, drawY] = [e.offsetX, e.offsetY];
 });
 
-canvasEL.addEventListener("mousemove", draw);
-canvasEL.addEventListener("mouseup", () => (isDrawing = false));
-canvasEL.addEventListener("mouseout", () => (isDrawing = false));
+canvasEl.addEventListener("mousemove", draw);
+canvasEl.addEventListener("mouseup", () => (isDrawing = false));
+canvasEl.addEventListener("mouseout", () => (isDrawing = false));
+el("#strokeWidth").addEventListener("change", () => {
+  selectedLineWidth = el("#strokeWidth").value;
+});
 
 // SECTION: downloadbutton
 let downloadButton = document.getElementById("saveCanvas");
