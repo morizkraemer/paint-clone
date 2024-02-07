@@ -55,6 +55,10 @@ let backgroundColor = "#FFF";
 function clearCanvas() {
   ctx.fillStyle = backgroundColor;
   ctx.fillRect(0, 0, canvasEL.width, canvasEL.height);
+// SECTION: logic helpers
+function convertRGB(color) {
+  const { r, g, b, a } = color;
+  return `rgba(${r}, ${g}, ${b}, ${(a / 255).toFixed(1)})`;
 }
 
 function initCanvas() {
@@ -62,6 +66,24 @@ function initCanvas() {
   canvasEL.height = canvasBounding.height;
   canvasEL.width = canvasBounding.width;
   clearCanvas();
+function getPixelColor(imageData, x = 0, y = 0) {
+  const { width, data } = imageData;
+  const index = (y * width + x) * 4;
+  return {
+    r: data[index],
+    g: data[index + 1],
+    b: data[index + 2],
+    a: data[index + 3],
+  };
+}
+
+function findColorIndex(rgbColor) {
+  const output = COLORS.findIndex((e) => e === rgbColor);
+  return output !== -1 ? output : 0;
+}
+
+function colorsMatch(a, b) {
+  return a.r === b.r && a.g === b.g && a.b === b.b && a.a === b.a;
 }
 
 function selectColor(color) {
