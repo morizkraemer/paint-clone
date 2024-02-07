@@ -84,16 +84,30 @@ function clearCanvas() {
   ctx.fillRect(0, 0, canvasEl.width, canvasEl.height);
 }
 
+// SECTION: selecting tools and colors
 function selectColor(color) {
+  [...colorPalletteEL.children].forEach((c) => {
+    c.style.border = DEFAULT_BORDER_STYLE;
+  });
   if (this === window) {
     colorPalletteEL.children[color].style.border = SELECTED_BORDER_STYLE;
     selectedColor = color;
   } else {
-    [...colorPalletteEL.children].forEach((c) => {
-      c.style.border = DEFAULT_BORDER_STYLE;
-    });
     this.style.border = SELECTED_BORDER_STYLE;
     selectedColor = this.colorCode;
+  }
+}
+
+function selectTool(tool) {
+  [...toolPaletteEL.children].forEach((t) => {
+    t.style.border = DEFAULT_BORDER_STYLE;
+  });
+  if (this === window) {
+    toolPaletteEL.children[tool].style.border = SELECTED_BORDER_STYLE;
+    selectedTool = tool;
+  } else {
+    this.style.border = SELECTED_BORDER_STYLE;
+    selectedTool = parseInt(this.getAttribute("toolCode"));
   }
 }
 
@@ -120,19 +134,6 @@ function initToolPalette() {
     tool.addEventListener("click", selectTool);
     selectTool(0);
   });
-}
-
-function selectTool(tool) {
-  if (this === window) {
-    toolPaletteEL.children[tool].style.border = SELECTED_BORDER_STYLE;
-    selectedTool = tool;
-  } else {
-    [...toolPaletteEL.children].forEach((t) => {
-      t.style.border = DEFAULT_BORDER_STYLE;
-    });
-    this.style.border = SELECTED_BORDER_STYLE;
-    selectedTool = this.getAttribute("toolCode");
-  }
 }
 
 function draw(e) {
