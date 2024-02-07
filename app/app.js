@@ -13,26 +13,26 @@ function create(html) {
 const DEFAULT_BORDER_STYLE = "#444444 solid";
 const SELECTED_BORDER_STYLE = "red dashed";
 let COLORS = [
-  "#000000", // Black
-  "#808080", // Gray
-  "#800000", // Maroon
-  "#FF0000", // Red
-  "#800080", // Purple
-  "#FF00FF", // Fuchsia
-  "#008000", // Green
-  "#00FF00", // Lime
-  "#808000", // Olive
-  "#FFFF00", // Yellow
-  "#000080", // Navy
-  "#0000FF", // Blue
-  "#008080", // Teal
-  "#00FFFF", // Aqua
-  "#FFFFFF", // White
-  "#C0C0C0", // Silver
-  "#FFA500", // Orange
-  "#FFC0CB", // Pink
-  "#FFFFE0", // Light Yellow
-  "#F5F5DC", // Beige
+  "rgba(0, 0, 0, 1.0)", // Black
+  "rgba(128, 128, 128, 1.0)", // Gray
+  "rgba(128, 0, 0, 1.0)", // Maroon
+  "rgba(255, 0, 0, 1.0)", // Red
+  "rgba(128, 0, 128, 1.0)", // Purple
+  "rgba(255, 0, 255, 1.0)", // Fuchsia
+  "rgba(0, 128, 0, 1.0)", // Green
+  "rgba(0, 255, 0, 1.0)", // Lime
+  "rgba(128, 128, 0, 1.0)", // Olive
+  "rgba(255, 255, 0, 1.0)", // Yellow
+  "rgba(0, 0, 128, 1.0)", // Navy
+  "rgba(0, 0, 255, 1.0)", // Blue
+  "rgba(0, 128, 128, 1.0)", // Teal
+  "rgba(0, 255, 255, 1.0)", // Aqua
+  "rgba(255, 255, 255, 1.0)", // White
+  "rgba(192, 192, 192, 1.0)", // Silver
+  "rgba(255, 165, 0, 1.0)", // Orange
+  "rgba(255, 192, 203, 1.0)", // Pink
+  "rgba(255, 255, 224, 1.0)", // Light Yellow
+  "rgba(245, 245, 220, 1.0)", // Beige
 ];
 
 // elements
