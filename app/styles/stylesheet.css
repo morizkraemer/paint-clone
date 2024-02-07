@@ -41,6 +41,15 @@
   border-radius: 10px;
 }
 
+#strokeWidth {
+  align: center;
+  border: 1px solid red;
+  width: 8rem;
+  height: 4rem;
+  transform: rotate(90deg);
+  margin-top: 50px;
+}
+
 #drawBoard {
   border-left: 3px solid black;
   border-bottom: 3px solid black;
