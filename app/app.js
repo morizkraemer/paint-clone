@@ -54,6 +54,8 @@ let backgroundColor = "#FFF";
 
 // SECTION: logic
 // SECTION: logic helpers
+
+//TODO: implement this function as a method of the color rgb object
 function convertRGB(color) {
   const { r, g, b, a } = color;
   return `rgba(${r}, ${g}, ${b}, ${(a / 255).toFixed(1)})`;
@@ -120,7 +122,6 @@ function initCanvas() {
 function initColorPalette() {
   COLORS.forEach((color, index) => {
     let swatch = create("div");
-    console.log(convertRGB(color));
     swatch.style.backgroundColor = convertRGB(color);
     swatch.style.border = DEFAULT_BORDER_STYLE;
     swatch.colorCode = index;
@@ -141,6 +142,7 @@ function initToolPalette() {
 //SECTION: drawing
 function draw(e) {
   if (!isDrawing) return;
+
   ctx.beginPath();
   ctx.moveTo(drawX, drawY);
   ctx.lineTo(e.offsetX, e.offsetY);
@@ -286,6 +288,6 @@ el("#strokeWidth").addEventListener("change", () => {
   selectedLineWidth = this.value;
 });
 el("#eraseCanvas").addEventListener("click", clearCanvas);
-initCanvas();
 initColorPalette();
 initToolPalette();
+initCanvas();
