@@ -12,6 +12,7 @@ function create(html) {
 // constants
 const DEFAULT_BORDER_STYLE = "#444444 solid";
 const SELECTED_BORDER_STYLE = "red dashed";
+const BACKGROUND_COLOR = "#FFF";
 let COLORS = [
   { r: 0, g: 0, b: 0, a: 255 }, // Black
   { r: 128, g: 128, b: 128, a: 255 }, // Gray
@@ -78,8 +79,17 @@ function findColorIndex(rgbColor) {
 }
 
 function clearCanvas() {
-  ctx.fillStyle = backgroundColor;
+  ctx.fillStyle = BACKGROUND_COLOR;
   ctx.fillRect(0, 0, canvasEl.width, canvasEl.height);
+}
+
+function getCanvasImageData(
+  startX = 0,
+  startY = 0,
+  endX = canvasEl.width,
+  endY = canvasEl.height,
+) {
+  return ctx.getImageData(startX, startY, endX, endY);
 }
 
 // SECTION: selecting tools and colors
@@ -92,7 +102,7 @@ function selectColor(color) {
     selectedColor = color;
   } else {
     this.style.border = SELECTED_BORDER_STYLE;
-    selectedColor = this.colorCode;
+    selectedColor = parseInt(this.getAttribute("data-colorcode"));
   }
 }
 
@@ -105,15 +115,16 @@ function selectTool(tool) {
     selectedTool = tool;
   } else {
     this.style.border = SELECTED_BORDER_STYLE;
-    selectedTool = parseInt(this.getAttribute("toolCode"));
+    selectedTool = parseInt(this.getAttribute("data-toolcode"));
   }
 }
 
 // SECTION: initialization
 
 function initCanvas() {
-  canvasEl.style.width = `${el("#drawBoard").clientWidth * 0.8}px`;
-  canvasEl.style.height = `${el("#drawBoard").clientHeight * 0.8}px`;
+  const drawBoardHeight = el("#drawBoard").clientHeight * 0.8;
+  canvasEl.style.width = `${drawBoardHeight * 1.5}px`;
+  canvasEl.style.height = `${drawBoardHeight}px`;
   canvasEl.height = canvasEl.clientHeight;
   canvasEl.width = canvasEl.clientWidth;
   clearCanvas();
@@ -124,7 +135,7 @@ function initColorPalette() {
     let swatch = create("div");
     swatch.style.backgroundColor = convertRGB(color);
     swatch.style.border = DEFAULT_BORDER_STYLE;
-    swatch.colorCode = index;
+    swatch.setAttribute("data-colorcode", index);
     swatch.addEventListener("click", selectColor);
     colorPalletteEL.append(swatch);
   });
@@ -141,8 +152,9 @@ function initToolPalette() {
 
 //SECTION: drawing
 function draw(e) {
-  if (!isDrawing) return;
-
+  if (!isDrawing) {
+    return;
+  }
   ctx.beginPath();
   ctx.moveTo(drawX, drawY);
   ctx.lineTo(e.offsetX, e.offsetY);
@@ -158,25 +170,24 @@ function useTool(e) {
       ctx.strokeStyle =
         selectedTool === 0
           ? convertRGB(COLORS[selectedColor])
-          : backgroundColor;
+          : BACKGROUND_COLOR;
       ctx.lineWidth = selectedLineWidth;
       ctx.lineCap = "round";
       isDrawing = true;
       [drawX, drawY] = [e.offsetX, e.offsetY];
       break;
     case 2: // paintbucket
-      console.log("hi");
-      const imageDataPaintBucket = ctx.getImageData(
-        0,
-        0,
-        canvasEl.width,
-        canvasEl.height,
-      );
+      const imageDataPaintBucket = getCanvasImageData();
       fillArea(imageDataPaintBucket, e.offsetX, e.offsetY, selectedColor);
 
       break;
     case 3: // colorpicker
-      const imageDataColorPicker = ctx.getImageData(e.offsetX, e.offsetY, 1, 1);
+      const imageDataColorPicker = getCanvasImageData(
+        e.offsetX,
+        e.offsetY,
+        1,
+        1,
+      );
       const rgbColor = convertRGB(getPixelColor(imageDataColorPicker));
       const colorIndex = findColorIndex(rgbColor);
       selectColor(colorIndex);
