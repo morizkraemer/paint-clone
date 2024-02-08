@@ -2,4 +2,11 @@ problems:
 
 fuzzy edges on drawn lines => colorpicker only works when clicked in the middle of a line, not the edges.
 fuzzy edges on drawn lines => fillbucket leaves artifacts on edges
+undo history array size is huge. maybe save all the actions in an array and execute again
 
+additional featuers:
+
+- layer management
+- shapes
+- different brush options
+-
