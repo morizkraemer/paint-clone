@@ -194,40 +194,86 @@ function fillArea(imageData, startX, startY, fillColorCode) {
     return a.r === b.r && a.g === b.g && a.b === b.b && a.a === b.a;
   }
   const targetColor = getPixelColor(imageData, startX, startY);
-  const checked = new Set();
+  const checked = new Set(`${startX}, ${startY}`);
+  const stack = [[startX, startY]];
 
-  function fillRecursively(x, y) {
-    const pixel = `${x}, ${y}`;
+  while (stack.length > 0) {
+    const [x, y] = stack.pop();
     const imageDataIndex = (y * imageData.width + x) * 4;
-    if (checked.has(pixel)) {
-      return;
+
+    if (checked.has(`${x}, ${y}`)) {
+      continue;
     }
-    if (!colorsMatch(targetColor, getPixelColor(imageData, x, y))) {
-      return;
+    if (x < 0) {
+      continue;
+    }
+    if (y < 0) {
+      continue;
+    }
+    if (x >= imageData.width) {
+      continue;
+    }
+    if (y >= imageData.height) {
+      continue;
     }
 
-    checked.add(pixel);
+    if (!colorsMatch(targetColor, getPixelColor(imageData, x, y))) {
+      continue;
+    }
+
     imageData.data[imageDataIndex] = COLORS[fillColorCode].r;
     imageData.data[imageDataIndex + 1] = COLORS[fillColorCode].g;
     imageData.data[imageDataIndex + 2] = COLORS[fillColorCode].b;
     imageData.data[imageDataIndex + 3] = COLORS[fillColorCode].a;
+    checked.add(`${x}, ${y}`);
 
-    if (x > 0) {
-      fillRecursively(x - 1, y);
-    }
-    if (y > 0) {
-      fillRecursively(x, y - 1);
-    }
-    if (x < imageData.width - 1) {
-      fillRecursively(x + 1, y);
-    }
-    if (y < imageData.height - 1) {
-      fillRecursively(x, y + 1);
-    }
+    stack.push([x + 1, y]);
+    stack.push([x, y + 1]);
+    stack.push([x - 1, y]);
+    stack.push([x, y - 1]);
   }
-  fillRecursively(startX, startY);
   ctx.putImageData(imageData, 0, 0);
 }
+
+// function fillArea(imageData, startX, startY, fillColorCode) {
+//   function colorsMatch(a, b) {
+//     return a.r === b.r && a.g === b.g && a.b === b.b && a.a === b.a;
+//   }
+//   const targetColor = getPixelColor(imageData, startX, startY);
+//   const checked = new Set();
+//
+//   function fillRecursively(x, y) {
+//     const pixel = `${x}, ${y}`;
+//     const imageDataIndex = (y * imageData.width + x) * 4;
+//     if (checked.has(pixel)) {
+//       return;
+//     }
+//     if (!colorsMatch(targetColor, getPixelColor(imageData, x, y))) {
+//       return;
+//     }
+//
+//     checked.add(pixel);
+//     imageData.data[imageDataIndex] = COLORS[fillColorCode].r;
+//     imageData.data[imageDataIndex + 1] = COLORS[fillColorCode].g;
+//     imageData.data[imageDataIndex + 2] = COLORS[fillColorCode].b;
+//     imageData.data[imageDataIndex + 3] = COLORS[fillColorCode].a;
+//
+//     if (x > 0) {
+//       fillRecursively(x - 1, y);
+//     }
+//     if (y > 0) {
+//       fillRecursively(x, y - 1);
+//     }
+//     if (x < imageData.width - 1) {
+//       fillRecursively(x + 1, y);
+//     }
+//     if (y < imageData.height - 1) {
+//       fillRecursively(x, y + 1);
+//     }
+//   }
+//   fillRecursively(startX, startY);
+//   ctx.putImageData(imageData, 0, 0);
+// }
 
 // SECTION: downloadbutton
 let downloadButton = document.getElementById("saveCanvas");
