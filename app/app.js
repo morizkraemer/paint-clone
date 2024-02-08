@@ -148,7 +148,7 @@ function draw(e) {
   [drawX, drawY] = [e.offsetX, e.offsetY];
 }
 
-canvasEl.addEventListener("mousedown", (e) => {
+function useTool(e) {
   switch (selectedTool) {
     case 0: // paintbrush
     case 1: // eraser
@@ -181,14 +181,7 @@ canvasEl.addEventListener("mousedown", (e) => {
       selectTool(0);
       break;
   }
-});
-
-canvasEl.addEventListener("mousemove", draw);
-canvasEl.addEventListener("mouseup", () => (isDrawing = false));
-canvasEl.addEventListener("mouseout", () => (isDrawing = false));
-el("#strokeWidth").addEventListener("change", () => {
-  selectedLineWidth = el("#strokeWidth").value;
-});
+}
 
 //SECTION: fill tool
 
@@ -285,6 +278,13 @@ downloadButton.addEventListener("click", function () {
   downloadButton.download = "MyPicture.png";
 });
 
+canvasEl.addEventListener("mousedown", useTool);
+canvasEl.addEventListener("mousemove", draw);
+canvasEl.addEventListener("mouseup", () => (isDrawing = false));
+canvasEl.addEventListener("mouseout", () => (isDrawing = false));
+el("#strokeWidth").addEventListener("change", () => {
+  selectedLineWidth = this.value;
+});
 el("#eraseCanvas").addEventListener("click", clearCanvas);
 initCanvas();
 initColorPalette();
