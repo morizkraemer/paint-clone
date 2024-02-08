@@ -1,3 +1,5 @@
 problems:
 
 fuzzy edges on drawn lines => colorpicker only works when clicked in the middle of a line, not the edges.
+fuzzy edges on drawn lines => fillbucket leaves artifacts on edges
+
