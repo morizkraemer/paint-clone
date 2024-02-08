@@ -51,9 +51,11 @@ let selectedLineWidth = 10;
 let isDrawing = false;
 let drawX = 0;
 let drawY = 0;
-let backgroundColor = "#FFF";
+let undoHistory = [];
+let undoStep = -1;
 
 // SECTION: logic
+
 // SECTION: logic helpers
 
 //TODO: implement this function as a method of the color rgb object
@@ -128,6 +130,7 @@ function initCanvas() {
   canvasEl.height = canvasEl.clientHeight;
   canvasEl.width = canvasEl.clientWidth;
   clearCanvas();
+  addUndoStep();
 }
 
 function initColorPalette() {
@@ -179,6 +182,7 @@ function useTool(e) {
     case 2: // paintbucket
       const imageDataPaintBucket = getCanvasImageData();
       fillArea(imageDataPaintBucket, e.offsetX, e.offsetY, selectedColor);
+      addUndoStep();
 
       break;
     case 3: // colorpicker
@@ -194,6 +198,32 @@ function useTool(e) {
       selectTool(0);
       break;
   }
+}
+
+function addUndoStep() {
+  if (undoStep + 1 < undoHistory.length) {
+    undoHistory.splice(undoStep + 1);
+  }
+  undoStep++;
+  undoHistory.push(getCanvasImageData());
+  console.log(undoStep);
+  console.log(undoHistory);
+}
+
+function undoStepBack() {
+  if (undoStep > 0) {
+    undoStep--;
+    ctx.putImageData(undoHistory[undoStep], 0, 0);
+  }
+  console.log(undoStep);
+  console.log(undoHistory);
+}
+
+function undoStepForward() {
+  if (undoStep + 1 < undoHistory.length) undoStep++;
+  ctx.putImageData(undoHistory[undoStep], 0, 0);
+  console.log(undoStep);
+  console.log(undoHistory);
 }
 
 //SECTION: fill tool
@@ -293,12 +323,24 @@ downloadButton.addEventListener("click", function () {
 
 canvasEl.addEventListener("mousedown", useTool);
 canvasEl.addEventListener("mousemove", draw);
-canvasEl.addEventListener("mouseup", () => (isDrawing = false));
-canvasEl.addEventListener("mouseout", () => (isDrawing = false));
-el("#strokeWidth").addEventListener("change", () => {
+canvasEl.addEventListener("mouseup", () => {
+  if (isDrawing) {
+    addUndoStep();
+  }
+  isDrawing = false;
+});
+canvasEl.addEventListener("mouseout", () => {
+  if (isDrawing) {
+    addUndoStep();
+  }
+  isDrawing = false;
+});
+el("#strokeWidth").addEventListener("change", function stroke() {
   selectedLineWidth = this.value;
 });
 el("#eraseCanvas").addEventListener("click", clearCanvas);
+el("#forward").addEventListener("click", undoStepForward);
+el("#backward").addEventListener("click", undoStepBack);
 initColorPalette();
 initToolPalette();
 initCanvas();

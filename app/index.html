@@ -12,10 +12,30 @@
       <div id="wrapper">
         <div id="sideBar">
           <div id="tools">
-            <img src="./icons/brush.png" alt="" toolCode="0" />
-            <img src="./icons/eraser.png" alt="" toolCode="1" />
-            <img src="./icons/bucket-droplet.png" alt="" toolCode="2" />
-            <img src="./icons/color-picker.png" alt="" toolCode="3" />
+            <img
+              class="menuItem"
+              src="./icons/brush.png"
+              alt=""
+              data-toolcode="0"
+            />
+            <img
+              class="menuItem"
+              src="./icons/eraser.png"
+              alt=""
+              data-toolcode="1"
+            />
+            <img
+              class="menuItem"
+              src="./icons/bucket-droplet.png"
+              alt=""
+              data-toolcode="2"
+            />
+            <img
+              class="menuItem"
+              src="./icons/color-picker.png"
+              alt=""
+              data-toolcode="3"
+            />
           </div>
           <input
             id="strokeWidth"
@@ -29,11 +49,30 @@
         <div id="drawBoard"><canvas id="canvas"></canvas></div>
         <div id="bottomBar">
           <div id="colors"></div>
+          <div id="undoRedo">
+            <img
+              id="backward"
+              class="menuItem"
+              src="./icons/arrow-back-up.png"
+              alt="undo"
+            />
+            <img
+              id="forward"
+              class="menuItem"
+              src="./icons/arrow-forward-up.png"
+              alt="redo"
+            />
+          </div>
           <div id="fileMenu">
             <a id="saveCanvas"
-              ><img src="./icons/device-floppy.png" alt=""
+              ><img class="menuItem" src="./icons/device-floppy.png" alt=""
             /></a>
-            <img id="eraseCanvas" src="./icons/photo-x.png" alt="" />
+            <img
+              id="eraseCanvas"
+              class="menuItem"
+              src="./icons/photo-x.png"
+              alt=""
+            />
           </div>
         </div>
       </div>

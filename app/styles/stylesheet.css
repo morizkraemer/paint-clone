@@ -35,11 +35,6 @@
   flex-direction: column;
   gap: 1rem;
 }
-#tools img {
-  width: 4rem;
-  border: 2px solid;
-  border-radius: 10px;
-}
 
 #strokeWidth {
   align: center;
@@ -101,7 +96,7 @@
   width: fit-content;
 }
 
-#fileMenu img {
+.menuItem {
   width: 4rem;
   border: 2px solid;
   border-radius: 10px;
