@@ -110,6 +110,8 @@ function selectTool(tool) {
 // SECTION: initialization
 
 function initCanvas() {
+  canvasEl.style.width = `${el("#drawBoard").clientWidth * 0.8}px`;
+  canvasEl.style.height = `${el("#drawBoard").clientHeight * 0.8}px`;
   canvasEl.height = canvasEl.clientHeight;
   canvasEl.width = canvasEl.clientWidth;
   clearCanvas();
@@ -161,6 +163,7 @@ canvasEl.addEventListener("mousedown", (e) => {
       [drawX, drawY] = [e.offsetX, e.offsetY];
       break;
     case 2: // paintbucket
+      console.log("hi");
       const imageDataPaintBucket = ctx.getImageData(
         0,
         0,
