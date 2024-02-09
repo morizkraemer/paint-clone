@@ -10,3 +10,19 @@ additional featuers:
 - shapes
 - different brush options
 -
+
+
+ was habe ich gelernt:
+
+ - string manipulation: toString(16), parseInt(16) substring()
+ - Javascript Sets
+ - V8 call stack limit
+ - rekursive Funktion
+ - Objekt instanzieren
+ - canvas 
+    - Pfade
+    - getImageData
+      - Farbe eines pixels extrahieren
+      - indexing (y * width + x) * 4
+    - putImageData    
+
